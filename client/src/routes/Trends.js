@@ -6,7 +6,7 @@ import '.././App.css';
 function Trends(props){
     const [searches,setSearches] = useState([])
     useEffect(() => {
-        const URL = "http://localhost:5000"
+        const URL = "/api/dailytrends"
         const config = {
             onDownloadProgress : function(progressEvent){
                 console.log(progressEvent)

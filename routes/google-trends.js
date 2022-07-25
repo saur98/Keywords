@@ -7,7 +7,7 @@ const googleTrends = require('google-trends-api')
 const app = express()
 app.use(fileUpload());
 
-app.get("/",async (request,response) => {
+app.get("/api/dailytrends",async (request,response) => {
     const data = await googleTrends.dailyTrends({ geo: "US" })
     console.log(typeof data)
     const searches = []
@@ -34,9 +34,5 @@ app.get("/",async (request,response) => {
     
 });
 
-app.post("/",(request,response) => {
-    console.log(request.files)
-    response.status(200).end()
-})
 
 module.exports = app
