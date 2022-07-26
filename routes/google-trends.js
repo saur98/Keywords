@@ -38,6 +38,7 @@ app.post("/api/link", async (request, response) => {
                 const browser = await puppeteer.launch({
                     args: ['--disable-gpu']
                 }).catch(err => console.log)
+                console.log(browser)
                 const page = await browser.newPage().catch(err => console.log)
                 await page.goto(URL, { waitUntil: 'domcontentloaded' }).catch(err => console.log)
                 const pTags = await page.$$("p").catch(err => console.log)
