@@ -43,17 +43,17 @@ app.post("/api/link",async (request,response) => {
         for(j in trendingSearch[i]['trendingSearches']){
             let values = []
             const URL = trendingSearch[i]['trendingSearches'][j].URL
-            const browser = await puppeteer.launch();
-            const page = await browser.newPage();
-    try{await page.goto(URL,{waitUntil : 'domcontentloaded'})} catch(err) { console.log}
-    const pTags = await page.$$("p");
+            console.log(URL)
+            const browser = await puppeteer.launch().catch(err => console.log)
+            const page = await browser.newPage().catch(err => console.log)
+    await page.goto(URL,{waitUntil : 'domcontentloaded'}).catch(err => console.log)
+    const pTags = await page.$$("p").catch(err => console.log)
     
     if(pTags.length > 0){
-    let value = await pTags[0].evaluate(el => el.textContent)
     
     for(ptag in pTags)
     {   
-        let value = await pTags[ptag].evaluate(el => el.textContent)
+        let value = await pTags[ptag].evaluate(el => el.textContent).catch(err => console.log)
         values.push(value)
     }
     }

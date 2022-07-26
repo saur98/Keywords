@@ -43,7 +43,7 @@ function Trends(props){
     return(
         <>
         {displaysearch()}
-        {content}
+        <div className="content" >{content}</div>
         </>
     )
 
