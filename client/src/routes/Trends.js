@@ -5,19 +5,28 @@ import '.././App.css';
 
 function Trends(props){
     const [searches,setSearches] = useState([])
+    const [content,setContent] = useState([])
     useEffect(() => {
         const URL = "/api/dailytrends"
         const config = {
             onDownloadProgress : function(progressEvent){
-                console.log(progressEvent)
+                
+                setContent(progressEvent.srcElement.response)
             }
         }
         
         axios.get(URL).then( data => {
             console.log(data)
-            setSearches(data)   
+            setSearches(data)
+            axios.post("/api/link",{trendingSearch:data.data} ,config).then(data=> {
+                const {values} = data
+                console.log(values)
+                
+            })   
         })
         .catch( err => console.log(err))
+
+        
       
 
     },[])
@@ -34,6 +43,7 @@ function Trends(props){
     return(
         <>
         {displaysearch()}
+        {content}
         </>
     )
 

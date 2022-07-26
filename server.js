@@ -11,7 +11,7 @@ const port = process.env.PORT || 5000
 
 app.use(cors())
 //connectDB()
-
+app.use(express.json())
 app.use(trends)
 app.use(express.static(path.join(__dirname, "client", "build")))
 

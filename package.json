@@ -21,6 +21,7 @@
     "google-trends-api": "^4.9.2",
     "mongoose": "^6.4.6",
     "nodemon": "^2.0.19",
+    "puppeteer": "^15.5.0",
     "xmldom": "^0.6.0",
     "xpath": "^0.0.32"
   },
