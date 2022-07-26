@@ -4,7 +4,6 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter,Routes,Route} from 'react-router-dom'
 import Trends from './routes/Trends.js'
-import Display from './routes/display-data'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -12,7 +11,6 @@ root.render(
     <BrowserRouter>
       <Routes>
       <Route path ="/" element={<Trends />} />
-      <Route path ="/display" element={<Display />} />
       </Routes>
     </BrowserRouter>
     

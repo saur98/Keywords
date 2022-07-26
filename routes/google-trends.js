@@ -34,12 +34,14 @@ app.get("/api/dailytrends", async (request, response) => {
 
 app.post("/api/link", async (request, response) => {
     const trendingSearch = request.body.trendingSearch
-    try {
-        for (i in trendingSearch) {
-            for (j in trendingSearch[i]['trendingSearches']) {
-                let values = []
+    for (i in trendingSearch) {
+        for (j in trendingSearch[i]['trendingSearches']) {
+            let values = []
+            try {
                 const URL = trendingSearch[i]['trendingSearches'][j].URL
-                const browser = await puppeteer.launch().catch(err => console.log)
+                const browser = await puppeteer.launch({
+                    args: ['--disable-gpu']
+                }).catch(err => console.log)
                 const page = await browser.newPage().catch(err => console.log)
                 await page.goto(URL, { waitUntil: 'domcontentloaded' }).catch(err => console.log)
                 const pTags = await page.$$("p").catch(err => console.log)
@@ -54,11 +56,14 @@ app.post("/api/link", async (request, response) => {
                 response.write(values.toString())
                 browser.close()
             }
-
+            catch (err) { console.log(err) }
         }
 
+
     }
-    catch (err) { console.log(err) }
+
+
+
     response.end()
 })
 
