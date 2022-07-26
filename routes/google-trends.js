@@ -1,13 +1,9 @@
-const { application } = require('express')
 const express = require('express')
 const axios = require('axios')
-const fileUpload = require('express-fileupload')
 const googleTrends = require('google-trends-api')
 const puppeteer = require('puppeteer')
-const cheerio = require('cheerio')
 
 const app = express()
-app.use(fileUpload());
 
 app.get("/api/dailytrends", async (request, response) => {
     const data = await googleTrends.dailyTrends({ geo: "US" })
