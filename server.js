@@ -1,5 +1,4 @@
 const express = require('express');
-const connectDB = require('./database/db.js')
 const trends = require('./routes/google-trends.js')
 const cors = require('cors')
 const app = express()
