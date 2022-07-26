@@ -15,9 +15,8 @@ function Trends(props) {
         }
 
         axios.get(URL).then(data => {
-            console.log(data)
             setSearches(data)
-            axios.post("/api/link", { trendingSearch: data.data }, config)
+            axios.post("/api/link", { trendingSearch: data.data }, config).catch(err => console.log(err))
         })
             .catch(err => console.log(err))
 
