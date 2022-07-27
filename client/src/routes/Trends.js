@@ -5,18 +5,22 @@ import '.././App.css';
 
 function Trends(props) {
     const [searches, setSearches] = useState([])
-    const [content, setContent] = useState([])
+    const [content, setContent] = useState()
     useEffect(() => {
         const URL = "/api/dailytrends"
-        const config = {
-            onDownloadProgress: function (progressEvent) {
-                setContent(progressEvent.srcElement.response)
-            }
-        }
+        // const config = {
+        //     onDownloadProgress: function (progressEvent) {
+        //         setContent(progressEvent.srcElement.response)
+        //     }
+        // }
 
         axios.get(URL).then(data => {
             setSearches(data)
-            axios.post("/api/link", { trendingSearch: data.data }, config).catch(err => console.log(err))
+            axios.post("/api/link", { trendingSearch: data.data }).then(
+                data => {
+                    setContent(data.data)
+                }
+            ).catch(err => console.log(err))
         })
             .catch(err => console.log(err))
 
@@ -31,6 +35,32 @@ function Trends(props) {
                 return <Today value={data} />
             })
 
+    }
+
+    function displaycontent(){
+        console.log("hi")
+        async function getdata(){
+            const trendingSearch = searches.data
+            var i,j = ''
+            for (i in trendingSearch) {
+                for (j in trendingSearch[i]['trendingSearches']) {
+                    const prev = content
+                    try {
+                        const URL = trendingSearch[i]['trendingSearches'][j].URL
+                        const {data} = await axios.get(URL)
+                        console.log(data)
+                        const $ = cheerio.load(data)
+                        var t = $('p').contents().map(function() {
+                            return (this.type === 'text') ? $(this).text()+' ' : '';
+                        }).get().join('');
+                        //console.log(t)
+                        setContent(prev+t)
+                    }
+                    catch (err) { console.log(err) }
+                }
+            }        
+        }
+        getdata()
     }
 
 

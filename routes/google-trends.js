@@ -29,9 +29,9 @@ app.get("/api/dailytrends", async (request, response) => {
 
 app.post("/api/link", async (request, response) => {
     const trendingSearch = request.body.trendingSearch
+    let values = []
     for (i in trendingSearch) {
         for (j in trendingSearch[i]['trendingSearches']) {
-            let values = []
             try {
                 const URL = trendingSearch[i]['trendingSearches'][j].URL
                 const {data} = await axios.get(URL)
@@ -40,7 +40,7 @@ app.post("/api/link", async (request, response) => {
                     return (this.type === 'text') ? $(this).text()+' ' : '';
                 }).get().join('');
                 values.push(t)
-                response.write(values.toString())
+                
             }
             catch (err) { console.log(err) }
         }
@@ -48,7 +48,7 @@ app.post("/api/link", async (request, response) => {
 
 
 
-    response.end()
+    response.send(values.toString())
 })
 
 
