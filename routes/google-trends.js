@@ -1,7 +1,7 @@
 const express = require('express')
 const axios = require('axios')
 const googleTrends = require('google-trends-api')
-const puppeteer = require('puppeteer')
+const cheerio = require('cheerio')
 
 const app = express()
 
@@ -35,28 +35,16 @@ app.post("/api/link", async (request, response) => {
             let values = []
             try {
                 const URL = trendingSearch[i]['trendingSearches'][j].URL
-                const browser = await puppeteer.launch({
-                    args: ['--no-sandbox']
-                }).catch(err => console.log)
-                //console.log("hi",await puppeteer.launch())
-                const page = await browser.newPage().catch(err => console.log)
-                await page.goto(URL, { waitUntil: 'domcontentloaded' }).catch(err => console.log)
-                const pTags = await page.$$("p").catch(err => console.log)
-
-                if (pTags.length > 0) {
-
-                    for (ptag in pTags) {
-                        let value = await pTags[ptag].evaluate(el => el.textContent).catch(err => console.log)
-                        values.push(value)
-                    }
-                }
+                const {data} = await axios.get(URL)
+                const $ = cheerio.load(data)
+                var t = $('p').contents().map(function() {
+                    return (this.type === 'text') ? $(this).text()+' ' : '';
+                }).get().join('');
+                values.push(t)
                 response.write(values.toString())
-                browser.close()
             }
             catch (err) { console.log(err) }
         }
-
-
     }
 
 
