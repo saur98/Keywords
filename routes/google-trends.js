@@ -7,7 +7,6 @@ const app = express()
 
 app.get("/api/dailytrends", async (request, response) => {
     const data = await googleTrends.dailyTrends({ geo: "US" })
-    console.log(typeof data)
     const searches = []
     const datas = JSON.parse(data).default.trendingSearchesDays
     trendingSearchesDays = datas.map(data => {
