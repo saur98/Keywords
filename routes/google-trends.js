@@ -36,9 +36,9 @@ app.post("/api/link", async (request, response) => {
             try {
                 const URL = trendingSearch[i]['trendingSearches'][j].URL
                 const browser = await puppeteer.launch({
-                    args: ['--disable-gpu']
+                    args: ['--no-sandbox']
                 }).catch(err => console.log)
-                console.log(browser)
+                console.log("hi",browser)
                 const page = await browser.newPage().catch(err => console.log)
                 await page.goto(URL, { waitUntil: 'domcontentloaded' }).catch(err => console.log)
                 const pTags = await page.$$("p").catch(err => console.log)
