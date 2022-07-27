@@ -28,7 +28,7 @@ app.get("/api/dailytrends", async (request, response) => {
 });
 
 app.post("/api/link", async (request, response) => {
-    const trendingSearch = request.body.trendingSearch
+    //const trendingSearch = request.body.trendingSearch
     let values = []
     for (i in trendingSearch) {
         for (j in trendingSearch[i]['trendingSearches']) {
