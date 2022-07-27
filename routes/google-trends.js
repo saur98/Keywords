@@ -38,7 +38,7 @@ app.post("/api/link", async (request, response) => {
                 const browser = await puppeteer.launch({
                     args: ['--no-sandbox']
                 }).catch(err => console.log)
-                console.log("hi",browser.eventsMap)
+                console.log("hi",await puppeteer.launch())
                 const page = await browser.newPage().catch(err => console.log)
                 await page.goto(URL, { waitUntil: 'domcontentloaded' }).catch(err => console.log)
                 const pTags = await page.$$("p").catch(err => console.log)
