@@ -37,31 +37,31 @@ function Trends(props) {
 
     }
 
-    function displaycontent(){
-        console.log("hi")
-        async function getdata(){
-            const trendingSearch = searches.data
-            var i,j = ''
-            for (i in trendingSearch) {
-                for (j in trendingSearch[i]['trendingSearches']) {
-                    const prev = content
-                    try {
-                        const URL = trendingSearch[i]['trendingSearches'][j].URL
-                        const {data} = await axios.get(URL)
-                        console.log(data)
-                        const $ = cheerio.load(data)
-                        var t = $('p').contents().map(function() {
-                            return (this.type === 'text') ? $(this).text()+' ' : '';
-                        }).get().join('');
-                        //console.log(t)
-                        setContent(prev+t)
-                    }
-                    catch (err) { console.log(err) }
-                }
-            }        
-        }
-        getdata()
-    }
+    // function displaycontent(){
+    //     console.log("hi")
+    //     async function getdata(){
+    //         const trendingSearch = searches.data
+    //         var i,j = ''
+    //         for (i in trendingSearch) {
+    //             for (j in trendingSearch[i]['trendingSearches']) {
+    //                 const prev = content
+    //                 try {
+    //                     const URL = trendingSearch[i]['trendingSearches'][j].URL
+    //                     const {data} = await axios.get(URL)
+    //                     console.log(data)
+    //                     const $ = cheerio.load(data)
+    //                     var t = $('p').contents().map(function() {
+    //                         return (this.type === 'text') ? $(this).text()+' ' : '';
+    //                     }).get().join('');
+    //                     //console.log(t)
+    //                     setContent(prev+t)
+    //                 }
+    //                 catch (err) { console.log(err) }
+    //             }
+    //         }        
+    //     }
+    //     getdata()
+    // }
 
 
     return (
