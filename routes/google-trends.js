@@ -28,28 +28,30 @@ app.get("/api/dailytrends", async (request, response) => {
 });
 
 app.post("/api/link", async (request, response) => {
-    //const trendingSearch = request.body.trendingSearch
+    const trendingSearch = request.body.trendingSearch
     let values = []
+    let str = ''
     for (i in trendingSearch) {
         for (j in trendingSearch[i]['trendingSearches']) {
             try {
                 const URL = trendingSearch[i]['trendingSearches'][j].URL
                 
                 const {data} = await axios.get(URL)
-                const $ = cheerio.load(data)
-                var t = $('p').contents().map(function() {
-                    return (this.type === 'text') ? $(this).text()+' ' : '';
-                }).get().join('');
-                values.push(t)
+                str += data
                 
             }
             catch (err) { console.log(err) }
         }
     }
+    const $ = cheerio.load(str)
+    var t = $('p').contents().map(function() {
+                    return (this.type === 'text') ? $(this).text()+' ' : '';
+                }).get().join('');
+    
 
 
 
-    response.send(values.toString())
+    response.send(t)
 })
 
 

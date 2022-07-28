@@ -81,7 +81,8 @@ function Today(props) {
     }
 
     const values = () => {
-        return trendingSearches.map(data => <div><iframe src={data.URL}/><a href={data.URL} >{data.query}</a></div>)
+        //console.log(trendingSearches)
+        return trendingSearches.map(data => <div><a href={data.URL} >{data.query}</a></div>)
     }
 
     return (
