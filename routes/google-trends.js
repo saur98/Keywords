@@ -36,7 +36,7 @@ app.post("/api/link", async (request, response) => {
             try {
                 let URL = trendingSearch[i]['trendingSearches'][j].URL
                 
-                let {data} = await axios.get(URL)
+                let {data} = await axios.get(URL,{timeout :500})
                 let $ = cheerio.load(data)
                 let t = $('p').contents().map(function() {
                     return (this.type === 'text') ? $(this).text()+' ' : '';
