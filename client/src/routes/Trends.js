@@ -67,7 +67,7 @@ function Trends(props) {
     return (
         <>
             {displaysearch()}
-            <div className="content" >{content}</div>
+            <div className="content" >{content?content:<progress />}</div>
         </>
     )
 
