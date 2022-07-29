@@ -3,13 +3,14 @@ const trends = require('./routes/google-trends.js')
 const cors = require('cors')
 const app = express()
 const path = require("path")
+const connectDB = require('./database/db.js')
 require("dotenv").config()
 
 
 const port = process.env.PORT || 5000
 
 app.use(cors())
-//connectDB()
+connectDB()
 app.use(express.json())
 
 app.use(trends)

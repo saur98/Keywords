@@ -16,7 +16,7 @@ function Trends(props) {
 
         axios.get(URL).then(data => {
             setSearches(data)
-            axios.post("/api/link", { trendingSearch: data.data }).then(
+            axios.post("/api/link", { id: data.data._id }).then(
                 data => {
                     setContent(data.data)
                 }
@@ -30,11 +30,12 @@ function Trends(props) {
     }, [])
 
     function displaysearch() {
-        if (searches.data)
-            return searches.data.map(data => {
+        //console.log(searches)
+        if (searches.data){
+            return searches.data.trends.map(data => {
                 return <Today value={data} />
             })
-
+        }
     }
 
     // function displaycontent(){
@@ -82,7 +83,7 @@ function Today(props) {
 
     const values = () => {
         //console.log(trendingSearches)
-        return trendingSearches.map(data => <div><a href={data.URL} >{data.query}</a></div>)
+        return trendingSearches.map(data => <div key={data.query}><a href={data.URL} >{data.query}</a></div>)
     }
 
     return (
