@@ -8,22 +8,23 @@ function Trends(props) {
     const [content, setContent] = useState()
     useEffect(() => {
         const URL = "/api/dailytrends"
-        // const config = {
-        //     onDownloadProgress: function (progressEvent) {
-        //         setContent(progressEvent.srcElement.response)
-        //     }
-        // }
+        
+        async function calls(){
+            const trends = await axios.get(URL).catch()
+            setSearches(trends) 
+            const content = await axios.post("/api/content", { id: trends.data.values._id }).catch()
+            setContent(content.data)
+            setTimeout(() => {
+                if(trends.data.html)
+            {
+                const MyHtml = document.getElementById("root").innerHTML
+                axios.post("/api/html",{html:MyHtml}).catch()
+            }
+            },0)
+        }
+        calls()
 
-        axios.get(URL).then(data => {
-            setSearches(data)
-            axios.post("/api/link", { id: data.data._id }).then(
-                data => {
-                    setContent(data.data)
-                }
-            ).catch(err => console.log(err))
-        })
-            .catch(err => console.log(err))
-
+        
 
 
 
@@ -32,43 +33,22 @@ function Trends(props) {
     function displaysearch() {
         //console.log(searches)
         if (searches.data){
-            return searches.data.trends.map(data => {
+            return searches.data.values.trends.map(data => {
                 return <Today value={data} />
             })
         }
     }
 
-    // function displaycontent(){
-    //     console.log("hi")
-    //     async function getdata(){
-    //         const trendingSearch = searches.data
-    //         var i,j = ''
-    //         for (i in trendingSearch) {
-    //             for (j in trendingSearch[i]['trendingSearches']) {
-    //                 const prev = content
-    //                 try {
-    //                     const URL = trendingSearch[i]['trendingSearches'][j].URL
-    //                     const {data} = await axios.get(URL)
-    //                     console.log(data)
-    //                     const $ = cheerio.load(data)
-    //                     var t = $('p').contents().map(function() {
-    //                         return (this.type === 'text') ? $(this).text()+' ' : '';
-    //                     }).get().join('');
-    //                     //console.log(t)
-    //                     setContent(prev+t)
-    //                 }
-    //                 catch (err) { console.log(err) }
-    //             }
-    //         }        
-    //     }
-    //     getdata()
-    // }
 
 
     return (
         <>
             {displaysearch()}
+            <a href="/oldertrends">OLDER TRENDS BY DATETIME</a>
+            <br />
+            <a href="/">Home</a>
             <div className="content" >{content?content:<progress />}</div>
+            
         </>
     )
 

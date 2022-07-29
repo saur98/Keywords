@@ -4,19 +4,19 @@ const googleTrends = require('google-trends-api')
 const cheerio = require('cheerio')
 const Trends = require("../schema/trending.js")
 const content = require("../schema/content.js")
+const fs = require('fs/promises');
 
 const app = express()
 
 app.get("/api/dailytrends", async (request, response) => {
     try{
     const trends_now = await Trends.findOne().sort({createdAt : -1})
-    //console.log(!trends_now)
-    response.status(200).json(trends_now)
     var date = new Date()
     date.setHours(date.getHours() - 1);
-    //console.log()
-    if(!trends_now || (!trends_now?false:trends_now.createdAt < date)){
-        //console.log("hi")
+    const progress = !trends_now || (!trends_now?false:trends_now.createdAt < date)
+    if(!progress){response.status(200).json({values:trends_now,html:false})}
+    else{
+        response.status(200).json({values:trends_now,html:true})
     const data = await googleTrends.dailyTrends({ geo: "US" })
     const searches = []
     const datas = JSON.parse(data).default.trendingSearchesDays
@@ -64,9 +64,10 @@ app.get("/api/dailytrends", async (request, response) => {
 
 });
 
-app.post("/api/link", async (request, response) => {
+app.post("/api/content", async (request, response) => {
     try{
     const id = request.body.id
+    
     const content_now = await Trends.findOne({_id : id},{content:1, _id:0})
     //console.log(content_now)
     response.send(content_now.content)
@@ -76,6 +77,22 @@ app.post("/api/link", async (request, response) => {
     }
     //console.log(str)
     
+})
+
+app.post("/api/html",async (request,response) => {
+    
+    var index = await fs.readFile('./client/public/index.html',{ encoding: 'utf8' });
+    const css = await fs.readFile('./client/src/App.css',{ encoding: 'utf8' });
+    const html = request.body.html
+    index = index.replace("</head>","<style>"+css+"</style>").replace('<div id="root">',html)
+    
+    //console.log(index)
+    const d = Date.now()
+    await fs.writeFile('./html-pages/'+d+'.html', index,{ flag: 'a' });
+    const date_format = new Date(d)
+    const url = "<a href='/oldertrends/"+d+"'>"+date_format+"</a><br>"
+    await fs.writeFile('./MyPages/pages.html', url,{ flag: 'a+' });  
+    response.end()  
 })
 
 
