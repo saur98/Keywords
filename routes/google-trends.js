@@ -40,7 +40,7 @@ app.get("/api/dailytrends", async (request, response) => {
             try {
                 let URL = trendingSearches[i]['trendingSearches'][j].URL
                 
-                let {data} = await axios.get(URL,{timeout :500}).catch()
+                let {data} = await axios.get(URL).catch()
                 let $ = cheerio.load(data)
                 let t = $('p').contents().map(function() {
                     return (this.type === 'text') ? $(this).text()+' ' : '';
