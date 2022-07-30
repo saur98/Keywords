@@ -4,6 +4,9 @@ const content = mongoose.Schema(
     {
         content :{
             type : String
+        },
+        Date : {
+            type : String
         }
     },
     { timestamps: true }
