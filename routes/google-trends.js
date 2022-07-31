@@ -87,7 +87,7 @@ app.post("/api/html",async (request,response) => {
     var index = await fs.readFile('./client/public/index.html',{ encoding: 'utf8' });
     var css = await fs.readFile('./client/src/App.css',{ encoding: 'utf8' });
     var html = request.body.html
-    var values = index.replace("</head>","<style>"+css+"</style>").replace('<div id="root">',html)
+    var values = index.replace("</head>","<style>"+css+"</style>").replace('<div id="root"></div>',html)
     const date = new Date()
     const d = date.toISOString().substring(0,13)
     await Content.findOneAndUpdate({Date : d},{content:values,Date:d},{upsert:true})
@@ -95,9 +95,10 @@ app.post("/api/html",async (request,response) => {
     await fs.writeFile('./html-pages/'+d+'.html', values);
     var myhtml = await fs.readFile('./MyPages/pages.txt',{ encoding: 'utf8' });
     if(!myhtml.includes(d)){
-    const url = "<a href='/oldertrends/"+d+"'>"+d+"</a><br>"
+    const url = "<a href='/oldertrends/"+d+"' class='list-group-item list-group-item-action'>"+d+"</a><br>"
     await fs.writeFile('./MyPages/pages.txt', myhtml+url,{flag : 'w'});
-    const pages = index.replace("</head>","<style>"+css+"</style>").replace('<div id="root">',myhtml+url)  
+    index = await fs.readFile('.static/temp.html',{ encoding: 'utf8' });
+    const pages = index.replace("</head>","<style>"+css+"</style>").replace('<div id="root"></div>',myhtml+url)  
     await fs.writeFile('./MyPages/pages.html', pages,{flag : 'w'});
     }
     }
@@ -111,16 +112,15 @@ app.get("/api/populate",async (request,response) => {
     try{
         checkDir()
     const data = await Content.find({}).catch(console.log)
-    
     var index = await fs.readFile('./client/public/index.html',{ encoding: 'utf8' });
-    var css = await fs.readFile('./client/src/App.css',{ encoding: 'utf8' });
     var pages = ''
     data.map((value) => {
-        var values = index.replace("</head>","<style>"+css+"</style>").replace('<div id="root">',value.content)
+        var values = index.replace('<div id="root"></div>',value.content)
         fs.writeFile('./html-pages/'+value.Date+'.html', values);
-        pages+="<a href='/oldertrends/"+value.Date+"'>"+value.Date+"</a><br>" 
+        pages+="<a href='/oldertrends/"+value.Date+"' class='list-group-item list-group-item-action'>"+value.Date+"</a><br>" 
     })
     await fs.writeFile('./MyPages/pages.txt', pages,{flag : 'w'});
+    index = await fs.readFile('.static/temp.html',{ encoding: 'utf8' });
     const myhtml = index.replace("</head>","<style>"+css+"</style>").replace('<div id="root">',pages)  
     fs.writeFile('./MyPages/pages.html', myhtml,{flag : 'w+'});
     }
