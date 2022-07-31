@@ -5,6 +5,7 @@ const app = express()
 const path = require("path")
 const checkDir = require('./helper/directory.js')
 const connectDB = require('./database/db.js')
+const Populate = require('./helper/populate.js')
 require("dotenv").config()
 
 
@@ -13,6 +14,7 @@ const port = process.env.PORT || 5000
 app.use(cors())
 checkDir()
 connectDB()
+Populate()
 app.use(express.json({limit: '50mb'}))
 
 app.use(trends)
