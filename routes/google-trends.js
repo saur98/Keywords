@@ -94,7 +94,7 @@ app.post("/api/html",async (request,response) => {
     await fs.writeFile('./html-pages/'+d+'.html', values);
     var myhtml = await fs.readFile('./MyPages/pages.txt',{ encoding: 'utf8' });
     if(!myhtml.includes(d)){
-    const url = "<a href='/oldertrends/"+d+"' class='list-group-item list-group-item-action'>"+d+"</a>"
+    const url = "<a href='/oldertrends/"+d+"' class='list-group-item list-group-item-action'>"+d+"</a><br>"
     await fs.writeFile('./MyPages/pages.txt', myhtml+url,{flag : 'w'});
     index = await fs.readFile('static/temp.html',{ encoding: 'utf8' });
     const pages = index.replace('<div id="root"></div>',myhtml+url)  
