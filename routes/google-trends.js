@@ -5,17 +5,18 @@ const cheerio = require('cheerio')
 const Trends = require("../schema/trending.js")
 const Content = require("../schema/content.js")
 const fs = require('fs/promises');
+const checkDir = require('../helper/directory.js')
 
 const app = express()
 
 app.get("/api/dailytrends", async (request, response) => {
     try{
-        console.log("in")
+        
     const trends_now = await Trends.findOne().sort({createdAt : -1})
     var date = new Date()
     date.setHours(date.getHours() - 1);
     const progress = !trends_now || (!trends_now?false:trends_now.createdAt < date)
-    if(!progress){response.status(200).json({values:trends_now,html:true})}
+    if(!progress){response.status(200).json({values:trends_now,html:false})}
     else{
         response.status(200).json({values:trends_now,html:true})
     const data = await googleTrends.dailyTrends({ geo: "US" })
@@ -56,7 +57,7 @@ app.get("/api/dailytrends", async (request, response) => {
     let trend = new Trends({trends : trendingSearches,content : str})
     await trend.save()
     await Trends.findByIdAndDelete(trends_now._id)
-    console.log("out")
+    
     }
     }
     catch(err){
@@ -82,7 +83,7 @@ app.post("/api/content", async (request, response) => {
 })
 
 app.post("/api/html",async (request,response) => {
-
+    try{
     var index = await fs.readFile('./client/public/index.html',{ encoding: 'utf8' });
     var css = await fs.readFile('./client/src/App.css',{ encoding: 'utf8' });
     var html = request.body.html
@@ -90,16 +91,43 @@ app.post("/api/html",async (request,response) => {
     const date = new Date()
     const d = date.toISOString().substring(0,13)
     await Content.findOneAndUpdate({Date : d},{content:values,Date:d},{upsert:true})
-    
-    
-    values = index.replace("</head>","<style>"+css+"</style>").replace('<div id="root">',html)
+
     await fs.writeFile('./html-pages/'+d+'.html', values);
-    var myhtml = await fs.readFile('./client/public/index.html',{ encoding: 'utf8' });
+    var myhtml = await fs.readFile('./MyPages/pages.txt',{ encoding: 'utf8' });
     if(!myhtml.includes(d)){
     const url = "<a href='/oldertrends/"+d+"'>"+d+"</a><br>"
-    await fs.writeFile('./MyPages/pages.html', myhtml+url);  
+    await fs.writeFile('./MyPages/pages.txt', myhtml+url,{flag : 'w'});
+    const pages = index.replace("</head>","<style>"+css+"</style>").replace('<div id="root">',myhtml+url)  
+    await fs.writeFile('./MyPages/pages.html', pages,{flag : 'w'});
     }
+    }
+    catch(err){
+        console.log(err)
+    }   
     response.end()  
+})
+
+app.get("/api/populate",async (request,response) => {
+    try{
+        checkDir()
+    const data = await Content.find({}).catch(console.log)
+    
+    var index = await fs.readFile('./client/public/index.html',{ encoding: 'utf8' });
+    var css = await fs.readFile('./client/src/App.css',{ encoding: 'utf8' });
+    var pages = ''
+    data.map((value) => {
+        var values = index.replace("</head>","<style>"+css+"</style>").replace('<div id="root">',value.content)
+        fs.writeFile('./html-pages/'+value.Date+'.html', values);
+        pages+="<a href='/oldertrends/"+value.Date+"'>"+value.Date+"</a><br>" 
+    })
+    await fs.writeFile('./MyPages/pages.txt', pages,{flag : 'w'});
+    const myhtml = index.replace("</head>","<style>"+css+"</style>").replace('<div id="root">',pages)  
+    fs.writeFile('./MyPages/pages.html', myhtml,{flag : 'w+'});
+    }
+    catch(err){
+        console.log(err)
+    }
+    response.send("POPULATED")
 })
 
 

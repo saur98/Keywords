@@ -3,6 +3,7 @@ const trends = require('./routes/google-trends.js')
 const cors = require('cors')
 const app = express()
 const path = require("path")
+const checkDir = require('./helper/directory.js')
 const connectDB = require('./database/db.js')
 require("dotenv").config()
 
@@ -10,6 +11,7 @@ require("dotenv").config()
 const port = process.env.PORT || 5000
 
 app.use(cors())
+checkDir()
 connectDB()
 app.use(express.json({limit: '50mb'}))
 
