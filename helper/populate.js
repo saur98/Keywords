@@ -11,7 +11,7 @@ module.exports = async () =>{
     data.map((value) => {
         var values = index.replace("</head>","<style>"+css+"</style>").replace('<div id="root"></div>',value.content)
         fs.writeFile('./html-pages/'+value.Date+'.html', values);
-        pages+="<a href='/oldertrends/"+value.Date+"' class='list-group-item list-group-item-action'>"+value.Date+"</a><br>" 
+        pages+="<div><a href='/oldertrends/"+value.Date+"' class='list-group-item list-group-item-action'>"+value.Date+"</a></div>" 
     })
     await fs.writeFile('./MyPages/pages.txt', pages,{flag : 'w'});
     index = await fs.readFile('static/temp.html',{ encoding: 'utf8' });
