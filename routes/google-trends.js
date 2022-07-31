@@ -97,7 +97,7 @@ app.post("/api/html",async (request,response) => {
     if(!myhtml.includes(d)){
     const url = "<a href='/oldertrends/"+d+"' class='list-group-item list-group-item-action'>"+d+"</a><br>"
     await fs.writeFile('./MyPages/pages.txt', myhtml+url,{flag : 'w'});
-    index = await fs.readFile('.static/temp.html',{ encoding: 'utf8' });
+    index = await fs.readFile('/static/temp.html',{ encoding: 'utf8' });
     const pages = index.replace("</head>","<style>"+css+"</style>").replace('<div id="root"></div>',myhtml+url)  
     await fs.writeFile('./MyPages/pages.html', pages,{flag : 'w'});
     }
@@ -120,7 +120,7 @@ app.get("/api/populate",async (request,response) => {
         pages+="<a href='/oldertrends/"+value.Date+"' class='list-group-item list-group-item-action'>"+value.Date+"</a><br>" 
     })
     await fs.writeFile('./MyPages/pages.txt', pages,{flag : 'w'});
-    index = await fs.readFile('.static/temp.html',{ encoding: 'utf8' });
+    index = await fs.readFile('/static/temp.html',{ encoding: 'utf8' });
     const myhtml = index.replace("</head>","<style>"+css+"</style>").replace('<div id="root">',pages)  
     fs.writeFile('./MyPages/pages.html', myhtml,{flag : 'w+'});
     }
