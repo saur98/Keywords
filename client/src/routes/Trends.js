@@ -1,6 +1,8 @@
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 import '.././App.css';
+import '../ads/ads.js'
+import home_add from '../ads/ads.js';
 
 
 function Trends(props) {
@@ -22,8 +24,7 @@ function Trends(props) {
             }
             },0)
         }
-        calls()
-
+        calls();
         
 
 
@@ -48,7 +49,7 @@ function Trends(props) {
             <br />
             <a href="/">Home</a>
             <div className="content" >{content?content:<progress />}</div>
-            
+            {home_add()}
         </>
     )
 
