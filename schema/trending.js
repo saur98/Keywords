@@ -6,7 +6,10 @@ const trending = mongoose.Schema(
             type : Array
         },
         content :{
-            type : String
+            type : Array
+        },
+        keywords :{
+            type : Array
         },
         Date : {
             type : String

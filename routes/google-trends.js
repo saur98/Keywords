@@ -6,6 +6,7 @@ const Trends = require("../schema/trending.js")
 const Content = require("../schema/content.js")
 const fs = require('fs/promises');
 const Populate = require('../helper/populate.js')
+const keyword_extractor = require("keyword-extractor");
 
 const app = express()
 
@@ -35,7 +36,7 @@ app.get("/api/dailytrends", async (request, response) => {
         }
         return data
     })
-    let str = ''
+    let str = []
     let i,j 
     for (i in trendingSearches) {
         for (j in trendingSearches[i]['trendingSearches']) {
@@ -46,17 +47,26 @@ app.get("/api/dailytrends", async (request, response) => {
                 let $ = cheerio.load(data)
                 let t = $('p').contents().map(function() {
                     return (this.type === 'text') ? $(this).text()+' ' : '';
-                }).get().join('');
-                str += t
+                }).get();
+                for(var p of t){
+                    str.push(p)
+                }
+                
                 
             }
             catch (err) { console.log(err) }
         }
     }
-
-    const d = date.toISOString().substring(0,13)
-    await Trends.findOneAndUpdate({Date : d},{trends : trendingSearches,content : str,Date : d},{upsert:true})
-    
+    //console.log(str)
+    const d = date.toISOString().substring(0,13)    
+    const extraction_result =
+keyword_extractor.extract(str.join(''),{
+    language:"english",
+    remove_digits: true,
+    return_changed_case:true,
+    remove_duplicates: false
+});
+await Trends.findOneAndUpdate({Date : d},{trends : trendingSearches,content : str,keywords : getMax(extraction_result,10),Date : d},{upsert:true})
     }
     }
     catch(err){
@@ -65,6 +75,21 @@ app.get("/api/dailytrends", async (request, response) => {
     //response.status(200).json(trendingSearches)
 
 });
+
+function getMax(data, n) {
+    var tmp = {}, tops = [];
+  
+    // Create object with count of occurances of each array element
+    data.forEach(function(item) {
+        tmp[item] = tmp[item] ? tmp[item]+1 : 1;
+    });
+  
+    // Create an array of the sorted object properties
+    tops = Object.keys(tmp).sort(function(a, b) { return tmp[a] - tmp[b] });
+  
+    // Return last n elements in reverse order
+    return tops.slice(-(n)).reverse();
+}
 
 app.post("/api/content", async (request, response) => {
     try{
@@ -88,7 +113,7 @@ app.post("/api/html",async (request,response) => {
     var html = request.body.html
     var values = index.replace("</head>","<style>"+css+"</style>").replace('<div id="root"></div>',html)
     const date = new Date()
-    const d = date.toISOString().substring(0,13)
+    const d = date.toISOString().substring(0,13).replace(/[-T]/g,'')
     await Content.findOneAndUpdate({Date : d},{content:values,Date:d},{upsert:true})
 
     await fs.writeFile('./html-pages/'+d+'.html', values);

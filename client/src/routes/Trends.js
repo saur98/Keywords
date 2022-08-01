@@ -14,8 +14,8 @@ function Trends(props) {
         async function calls(){
             const trends = await axios.get(URL).catch()
             setSearches(trends) 
-            const content = await axios.post("/api/content", { id: trends.data.values._id }).catch()
-            setContent(content.data)
+            const contents = await axios.post("/api/content", { id: trends.data.values._id }).catch()
+            setContent(contents.data)
             setTimeout(() => {
                 if(trends.data.html)
             {
@@ -40,15 +40,25 @@ function Trends(props) {
         }
     }
 
+    function getContent(){
+        console.log(content)
+        const display = content.map(data => { return <p>{data}</p> })
+        return display
+    }
+
 
 
     return (
         <>
+            <div className="title">
+            <h1>TRENDING NOW</h1>
+            <h2>Globally</h2>
+            </div>
             {displaysearch()}
             <a href="/oldertrends">OLDER TRENDS BY DATETIME</a>
             <br />
             <a href="/">Home</a>
-            <div className="content" >{content?content:<progress />}</div>
+            <div className="content" >{content?getContent():<progress />}</div>
             {home_add()}
         </>
     )
@@ -69,7 +79,7 @@ function Today(props) {
 
     return (
         <>
-            <h1>{date()}</h1>
+            <h2 className='title'>{date()}</h2>
             <h6 className="searches">{values()}</h6>
         </>
     )

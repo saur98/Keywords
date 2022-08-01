@@ -31,8 +31,12 @@ app.get("/oldertrends/:id",(req,res) => {
     res.sendFile(path.join(__dirname, "html-pages", id+".html"));
 })
 
-app.get("*", (req, res) => {
+app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+});
+
+app.get("*", (req, res) => {
+    res.status(404).sendFile(path.join(__dirname, "static","404.html"));
 });
 
 app.listen(port,() => console.log("server is running at port 8000"))
