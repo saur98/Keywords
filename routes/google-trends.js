@@ -91,21 +91,6 @@ function getMax(data, n) {
     return tops.slice(-(n)).reverse();
 }
 
-app.post("/api/content", async (request, response) => {
-    try{
-    const id = request.body.id
-    
-    const content_now = await Trends.findOne({_id : id},{content:1, _id:0})
-    //console.log(content_now)
-    response.send(content_now.content)
-    }
-    catch(err){
-        console.log(err)
-    }
-    //console.log(str)
-    
-})
-
 app.post("/api/html",async (request,response) => {
     try{
     var index = await fs.readFile('./client/public/index.html',{ encoding: 'utf8' });
@@ -113,13 +98,16 @@ app.post("/api/html",async (request,response) => {
     var html = request.body.html
     var values = index.replace("</head>","<style>"+css+"</style>").replace('<div id="root"></div>',html)
     const date = new Date()
-    const d = date.toISOString().substring(0,13).replace(/[-T]/g,'')
-    await Content.findOneAndUpdate({Date : d},{content:values,Date:d},{upsert:true})
+    const d_upload = date.toISOString().substring(0,13)
+    await Content.findOneAndUpdate({Date : d_upload},{content:values,Date:d_upload},{upsert:true})
 
+    const d = date.toISOString().substring(0,13).replace(/[-T]/g,'')
     await fs.writeFile('./html-pages/'+d+'.html', values);
     var myhtml = await fs.readFile('./MyPages/pages.txt',{ encoding: 'utf8' });
+
+    const d_display = date.toISOString().substring(0,13).replace(/[T]/g,' ').concat(' Hour')
     if(!myhtml.includes(d)){
-    const url = "<div><a href='/oldertrends/"+d+"' class='list-group-item list-group-item-action'>"+d+"</a></div>"
+    const url = "<div><a href='/oldertrends/"+d+"' class='list-group-item list-group-item-action'>"+d_display+"</a></div>"
     await fs.writeFile('./MyPages/pages.txt', myhtml+url,{flag : 'w'});
     index = await fs.readFile('static/temp.html',{ encoding: 'utf8' });
     const pages = index.replace('<div id="root"></div>',myhtml+url)  

@@ -10,8 +10,8 @@ module.exports = async () =>{
     var pages = ''
     data.map((value) => {
         var values = index.replace("</head>","<style>"+css+"</style>").replace('<div id="root"></div>',value.content)
-        fs.writeFile('./html-pages/'+value.Date+'.html', values);
-        pages+="<div><a href='/oldertrends/"+value.Date+"' class='list-group-item list-group-item-action'>"+value.Date+"</a></div>" 
+        fs.writeFile('./html-pages/'+value.Date.substring(0,13).replace(/[-T]/g,'')+'.html', values);
+        pages+="<div><a href='/oldertrends/"+value.Date.substring(0,13).replace(/[-T]/g,'')+"' class='list-group-item list-group-item-action'>"+value.Date.replace(/[T]/g,' ').concat(' Hour')+"</a></div>" 
     })
     await fs.writeFile('./MyPages/pages.txt', pages,{flag : 'w'});
     index = await fs.readFile('static/temp.html',{ encoding: 'utf8' });
