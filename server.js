@@ -35,7 +35,7 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "client", "build", "index.html"));
 });
 
-app.get("/sitemap.xml", (req, res) => {
+app.get("/sitemap", (req, res) => {
     res.status(404).sendFile(path.join(__dirname, "MyPages", "sitemap.txt"));
 });
 
