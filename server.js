@@ -35,6 +35,10 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "client", "build", "index.html"));
 });
 
+app.get("/sitemap.xml", (req, res) => {
+    res.status(404).sendFile(path.join(__dirname, "MyPages", "sitemap.txt"));
+});
+
 app.get("*", (req, res) => {
     res.status(404).sendFile(path.join(__dirname, "static","404.html"));
 });

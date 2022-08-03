@@ -115,6 +115,12 @@ app.post("/api/html",async (request,response) => {
     const pages = index.replace('<div id="root"></div>',myhtml+url)  
     await fs.writeFile('./MyPages/pages.html', pages,{flag : 'w'});
     }
+    var sitemap = await fs.readFile('./MyPages/sitemap.txt',{ encoding: 'utf8' });
+    var site = 'https://popular-trends.herokuapp.com/oldertrends/'+d + '\r\n'
+    if(!sitemap.includes(site))
+    {
+        await fs.writeFile('./MyPages/sitemap.txt', sitemap+site,{flag : 'w'});
+    }
     }
     catch(err){
         console.log(err)
