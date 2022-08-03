@@ -7,6 +7,9 @@ const content = mongoose.Schema(
         },
         Date : {
             type : String
+        },
+        SEO : {
+            type : Array
         }
     },
     { timestamps: true }

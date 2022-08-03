@@ -9,7 +9,7 @@ module.exports = async () =>{
     var css = await fs.readFile('./client/src/App.css',{ encoding: 'utf8' });
     var pages = ''
     data.map((value) => {
-        var values = index.replace("</head>","<style>"+css+"</style>").replace('<div id="root"></div>',value.content)
+        var values = index.replace("</head>","<style>"+css+"</style>").replace('<div id="root"></div>',value.content).replace('<meta name="keywords" content="" />',value.SEO)
         fs.writeFile('./html-pages/'+value.Date.substring(0,13).replace(/[-T]/g,'')+'.html', values);
         pages+="<div><a href='/oldertrends/"+value.Date.substring(0,13).replace(/[-T]/g,'')+"' class='list-group-item list-group-item-action'>"+value.Date.replace(/[T]/g,' ').concat(' Hour')+"</a></div>" 
     })

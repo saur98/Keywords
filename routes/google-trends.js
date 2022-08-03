@@ -96,10 +96,12 @@ app.post("/api/html",async (request,response) => {
     var index = await fs.readFile('./client/public/index.html',{ encoding: 'utf8' });
     var css = await fs.readFile('./client/src/App.css',{ encoding: 'utf8' });
     var html = request.body.html
-    var values = index.replace("</head>","<style>"+css+"</style>").replace('<div id="root"></div>',html)
+    var SEO = '<meta name="keywords" content="'+request.body.SEO+'" />'
+    console.log(SEO)
+    var values = index.replace("</head>","<style>"+css+"</style>").replace('<div id="root"></div>',html).replace('<meta name="keywords" content="" />',SEO)
     const date = new Date()
     const d_upload = date.toISOString().substring(0,13)
-    await Content.findOneAndUpdate({Date : d_upload},{content:values,Date:d_upload},{upsert:true})
+    await Content.findOneAndUpdate({Date : d_upload},{content:values,Date:d_upload,SEO : SEO},{upsert:true})
 
     const d = date.toISOString().substring(0,13).replace(/[-T]/g,'')
     await fs.writeFile('./html-pages/'+d+'.html', values);

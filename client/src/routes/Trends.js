@@ -21,7 +21,7 @@ function Trends(props) {
                 if(trends.data.html)
             {
                 const MyHtml = document.getElementById("root").innerHTML
-                axios.post("/api/html",{html:MyHtml}).catch()
+                axios.post("/api/html",{html:MyHtml,SEO:trends.data.values.trends[0]['trendingSearches'][0]['query']}).catch()
             }
             },0)
         }
@@ -33,7 +33,7 @@ function Trends(props) {
     }, [])
 
     function displaysearch() {
-        //console.log(searches)
+        console.log(searches)
         if (searches.data){
             return searches.data.values.trends.map(data => {
                 return <Today value={data} />
@@ -105,7 +105,7 @@ function Keywords(props){
         return(
             props.value.map(data => {
                 if(data !== "—")
-                {console.log(data)
+                {
                     return <h2>{data}</h2>}
                     else{
                         return ''
