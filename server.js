@@ -36,7 +36,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/sitemap", (req, res) => {
-    res.status(404).sendFile(path.join(__dirname, "MyPages", "sitemap.txt"));
+    res.sendFile(path.join(__dirname, "MyPages", "sitemap.txt"));
 });
 
 app.get("*", (req, res) => {
