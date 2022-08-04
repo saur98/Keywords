@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const content = mongoose.Schema(
+const test = mongoose.Schema(
     {
         content :{
             type : String
@@ -10,12 +10,9 @@ const content = mongoose.Schema(
         },
         SEO : {
             type : Array
-        },
-        GEO : {
-            type : String
         }
     },
     { timestamps: true }
 )
 
-module.exports = mongoose.model("content",content)
+module.exports = mongoose.model("test",test)

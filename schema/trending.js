@@ -13,6 +13,9 @@ const trending = mongoose.Schema(
         },
         Date : {
             type : String
+        },
+        GEO : {
+            type : String
         }
     },
     { timestamps: true }

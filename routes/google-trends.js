@@ -7,20 +7,24 @@ const Content = require("../schema/content.js")
 const fs = require('fs/promises');
 const Populate = require('../helper/populate.js')
 const keyword_extractor = require("keyword-extractor");
+const Test = require('../schema/test.js')
 
 const app = express()
 
-app.get("/api/dailytrends", async (request, response) => {
+
+app.get("/api/dailytrends/:GEO", async (request, response) => {
     try{
-        
-    const trends_now = await Trends.findOne().sort({createdAt : -1})
+    const GEO = request.params.GEO
+    console.log(GEO)
+    const trends_now = await Trends.findOne({GEO : GEO}).sort({createdAt : -1})
     var date = new Date()
     date.setHours(date.getHours() - 1);
     const progress = !trends_now || (!trends_now?false:trends_now.createdAt < date)
+    //const progress = true
     if(!progress){response.status(200).json({values:trends_now,html:false})}
     else{
         response.status(200).json({values:trends_now,html:true})
-    const data = await googleTrends.dailyTrends({ geo: "US" })
+    const data = await googleTrends.dailyTrends({ geo: GEO })
     const searches = []
     const datas = JSON.parse(data).default.trendingSearchesDays
     trendingSearchesDays = datas.map(data => {
@@ -68,7 +72,7 @@ keyword_extractor.extract(str_keyword.join(''),{
     return_changed_case:true,
     remove_duplicates: false
 });
-await Trends.findOneAndUpdate({Date : d},{trends : trendingSearches,content : str,keywords : getMax(extraction_result,10),Date : d},{upsert:true})
+await Trends.findOneAndUpdate({Date : d,GEO: GEO},{GEO:GEO,trends : trendingSearches,content : str,keywords : getMax(extraction_result,10),Date : d},{upsert:true})
 //console.log("updated")
     }
     }
@@ -94,29 +98,30 @@ function getMax(data, n) {
     return tops.slice(-(n)).reverse();
 }
 
-app.post("/api/html",async (request,response) => {
+app.post("/api/html/:GEO",async (request,response) => {
     try{
+    const GEO = request.params.GEO
     var index = await fs.readFile('./client/public/index.html',{ encoding: 'utf8' });
     var css = await fs.readFile('./client/src/App.css',{ encoding: 'utf8' });
     var html = request.body.html
     var SEO = '<meta name="keywords" content="'+request.body.SEO+'" />'
-    //console.log(SEO)
+    //console.log(html)
     var values = index.replace("</head>","<style>"+css+"</style>").replace('<div id="root"></div>',html).replace('<meta name="keywords" content="" />',SEO)
     const date = new Date()
     const d_upload = date.toISOString().substring(0,13)
-    await Content.findOneAndUpdate({Date : d_upload},{content:values,Date:d_upload,SEO : SEO},{upsert:true})
+    await Content.findOneAndUpdate({Date : d_upload,GEO : GEO},{GEO : GEO,content:values,Date:d_upload,SEO : SEO},{upsert:true})
 
     const d = date.toISOString().substring(0,13).replace(/[-T]/g,'')
-    await fs.writeFile('./html-pages/'+d+'.html', values);
-    var myhtml = await fs.readFile('./MyPages/pages.txt',{ encoding: 'utf8' });
+    await fs.writeFile('./html-pages/'+GEO+'/'+d+'.html', values);
+    var myhtml = await fs.readFile('./MyPages/'+GEO+'/pages.txt',{ encoding: 'utf8' });
 
     const d_display = date.toISOString().substring(0,13).replace(/[T]/g,' ').concat(' Hour')
     if(!myhtml.includes(d)){
     const url = "<div><a href='/oldertrends/"+d+"' class='list-group-item list-group-item-action'>"+d_display+"</a></div>"
-    await fs.writeFile('./MyPages/pages.txt', myhtml+url,{flag : 'w'});
+    await fs.writeFile('./MyPages/'+GEO+'/pages.txt', myhtml+url,{flag : 'w'});
     index = await fs.readFile('static/temp.html',{ encoding: 'utf8' });
     const pages = index.replace('<div id="root"></div>',myhtml+url)  
-    await fs.writeFile('./MyPages/pages.html', pages,{flag : 'w'});
+    await fs.writeFile('./MyPages/'+GEO+'/pages.html', pages,{flag : 'w'});
     }
     var sitemap = await fs.readFile('./MyPages/sitemap.xml',{ encoding: 'utf8' });
     var site = `<url>
@@ -143,6 +148,14 @@ app.get("/api/populate",async (request,response) => {
         console.log(err)
     }
     response.send("POPULATED")
+})
+
+app.get("/api/delete",(request,response) => {
+    // Trends.findOneAndDelete().sort({createdAt : -1})
+    // Content.findOneAndDelete().sort({createdAt : -1})
+    const data = Test.findOneAndDelete({},{sort: { createdAt: -1 }})
+    console.log(data)
+    response.end()
 })
 
 
