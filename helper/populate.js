@@ -15,7 +15,7 @@ module.exports = async () =>{
         fs.writeFile('./html-pages/'+filename+'.html', values);
         pages+="<div><a href='/oldertrends/"+filename+'\r\n'+"' class='list-group-item list-group-item-action'>"+value.Date.replace(/[T]/g,' ').concat(' Hour')+"</a></div>" 
         sitemap+=`<url>
-            <loc>https://popular-trends.herokuapp.com/oldertrends/`+filename+'\r\n' + `\r\n</loc>
+            <loc>https://popular-trends.herokuapp.com/oldertrends/`+filename+ `\r\n</loc>
             <lastmod>`+value.Date.substring(0,10)+`</lastmod>
                 </url>`
     })
