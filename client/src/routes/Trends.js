@@ -132,6 +132,7 @@ function Content(props){
         <>
         <div className='Content' >
             <div className='Content-Title'><h1>{query}</h1></div>
+            <hr />
             <div className='Content-Display'>{display}</div>
         </div>
         </>
