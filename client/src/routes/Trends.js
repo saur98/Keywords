@@ -33,7 +33,7 @@ function Trends(props) {
     }, [])
 
     function displaysearch() {
-        console.log(searches)
+        //console.log(searches)
         if (searches.data){
             return searches.data.values.trends.map(data => {
                 return <Today value={data} />
@@ -42,9 +42,13 @@ function Trends(props) {
     }
 
     function getContent(){
-        
-        const display = content.map(data => { return <p>{data}</p> })
-        return display
+        if(content)
+        {
+            return (content.map(data => 
+            {
+                return <Content value={data}/>
+            }))
+        }
     }
 
 
@@ -66,9 +70,8 @@ function Trends(props) {
                 </div>
             <div className='keyword'>{keywords && <Keywords value={keywords}/>}</div>
             </div>
-            
             <br />
-            <a href="/">Home</a>
+            
             <div className="content" >{content?getContent():<progress />}</div>
             {home_add()}
             
@@ -122,4 +125,16 @@ function Keywords(props){
     )
 }
 
+function Content(props){
+    const query = props.value.query
+    const display = props.value.value.map(data => { return <p>{data}</p> })
+    return (
+        <>
+        <div className='Content' >
+            <div className='Content-Title'><h1>{query}</h1></div>
+            <div className='Content-Display'>{display}</div>
+        </div>
+        </>
+    )
+}
 export default Trends;

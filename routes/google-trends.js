@@ -37,19 +37,22 @@ app.get("/api/dailytrends", async (request, response) => {
         return data
     })
     let str = []
+    let str_keyword = []
     let i,j 
     for (i in trendingSearches) {
         for (j in trendingSearches[i]['trendingSearches']) {
             try {
                 let URL = trendingSearches[i]['trendingSearches'][j].URL
-                
+                let query = trendingSearches[i]['trendingSearches'][j].query
+
                 let {data} = await axios.get(URL).catch()
                 let $ = cheerio.load(data)
                 let t = $('p').contents().map(function() {
                     return (this.type === 'text') ? $(this).text()+' ' : '';
                 }).get();
+                str.push({query:query,value:t})
                 for(var p of t){
-                    str.push(p)
+                    str_keyword.push(p)
                 }
                 
                 
@@ -57,16 +60,16 @@ app.get("/api/dailytrends", async (request, response) => {
             catch (err) { console.log(err) }
         }
     }
-    //console.log(str)
     const d = date.toISOString().substring(0,13)    
     const extraction_result =
-keyword_extractor.extract(str.join(''),{
+keyword_extractor.extract(str_keyword.join(''),{
     language:"english",
     remove_digits: true,
     return_changed_case:true,
     remove_duplicates: false
 });
 await Trends.findOneAndUpdate({Date : d},{trends : trendingSearches,content : str,keywords : getMax(extraction_result,10),Date : d},{upsert:true})
+//console.log("updated")
     }
     }
     catch(err){
@@ -97,7 +100,7 @@ app.post("/api/html",async (request,response) => {
     var css = await fs.readFile('./client/src/App.css',{ encoding: 'utf8' });
     var html = request.body.html
     var SEO = '<meta name="keywords" content="'+request.body.SEO+'" />'
-    console.log(SEO)
+    //console.log(SEO)
     var values = index.replace("</head>","<style>"+css+"</style>").replace('<div id="root"></div>',html).replace('<meta name="keywords" content="" />',SEO)
     const date = new Date()
     const d_upload = date.toISOString().substring(0,13)
@@ -115,11 +118,15 @@ app.post("/api/html",async (request,response) => {
     const pages = index.replace('<div id="root"></div>',myhtml+url)  
     await fs.writeFile('./MyPages/pages.html', pages,{flag : 'w'});
     }
-    var sitemap = await fs.readFile('./MyPages/sitemap.txt',{ encoding: 'utf8' });
-    var site = 'https://popular-trends.herokuapp.com/oldertrends/'+d + '\r\n'
+    var sitemap = await fs.readFile('./MyPages/sitemap.xml',{ encoding: 'utf8' });
+    var site = `<url>
+        <loc>https://popular-trends.herokuapp.com/oldertrends/`+d + `\r\n</loc>
+        <lastmod>`+date.toISOString().substring(0,10)+`</lastmod>
+    </url>`    
     if(!sitemap.includes(site))
     {
-        await fs.writeFile('./MyPages/sitemap.txt', sitemap+site,{flag : 'w'});
+        let map = sitemap.replace('</urlset>',site)
+        await fs.writeFile('./MyPages/sitemap.xml', map,{flag : 'w'});
     }
     }
     catch(err){
