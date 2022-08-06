@@ -9,6 +9,7 @@ const Populate = require('../helper/populate.js')
 const keyword_extractor = require("keyword-extractor");
 const Test = require('../schema/test.js')
 const locations = require('../helper/GEO-mapping.js')
+const { query } = require('express')
 
 const app = express()
 
@@ -20,8 +21,8 @@ app.get("/api/dailytrends/:GEO", async (request, response) => {
     const trends_now = await Trends.findOne({GEO : GEO}).sort({createdAt : -1})
     var date = new Date()
     date.setHours(date.getHours() - 1);
-    //const progress = !trends_now || (!trends_now?false:trends_now.createdAt < date)
-    const progress = true
+    const progress = !trends_now || (!trends_now?false:trends_now.createdAt < date)
+    //const progress = true
     if(!progress){response.status(200).json({values:trends_now,html:false})}
     else{
         response.status(200).json({values:trends_now,html:true})
@@ -55,7 +56,14 @@ app.get("/api/dailytrends/:GEO", async (request, response) => {
                 let t = $('p').contents().map(function() {
                     return (this.type === 'text') ? $(this).text()+' ' : '';
                 }).get();
-                str.push({query:query,value:t})
+                var extraction_result = keyword_extractor.extract(t.join(''),{
+                    language:"english",
+                    remove_digits: true,
+                    return_changed_case:true,
+                    remove_duplicates: false,
+                    return_chained_words : true
+                });
+                str.push({query:query,value:t,keywords:getMax(extraction_result,10)})
                 for(var p of t){
                     str_keyword.push(p)
                 }
@@ -65,14 +73,15 @@ app.get("/api/dailytrends/:GEO", async (request, response) => {
             catch (err) { console.log(err) }
         }
     }
-    const d = date.toISOString().substring(0,13)    
-    const extraction_result =
-keyword_extractor.extract(str_keyword.join(''),{
-    language:"english",
-    remove_digits: true,
-    return_changed_case:true,
-    remove_duplicates: false
-});
+    const d = date.toISOString().substring(0,13)
+    var extraction_result = keyword_extractor.extract(str_keyword.join(''),{
+        language:"english",
+        remove_digits: true,
+        return_changed_case:true,
+        remove_duplicates: false,
+        return_chained_words : true
+    });
+   
 await Trends.findOneAndUpdate({Date : d,GEO: GEO},{GEO:GEO,trends : trendingSearches,content : str,keywords : getMax(extraction_result,10),Date : d},{upsert:true})
 //console.log("updated")
     }
@@ -106,7 +115,7 @@ app.post("/api/html/:GEO",async (request,response) => {
     //console.log(GEO,locations)
     var index = await fs.readFile('./client/public/index.html',{ encoding: 'utf8' });
     var css = await fs.readFile('./client/src/App.css',{ encoding: 'utf8' });
-    var html = request.body.html
+    var html = request.body.html.replace('id="location"','id="location" disabled="true"')
     var SEO = '<meta name="keywords" content="'+request.body.SEO+'" />'
     //console.log(html)
     var values = index.replace("</head>","<style>"+css+"</style>").replace('<div id="root"></div>',html).replace('<meta name="keywords" content="" />',SEO)
@@ -120,7 +129,7 @@ app.post("/api/html/:GEO",async (request,response) => {
 
     const d_display = date.toISOString().substring(0,13).replace(/[T]/g,' ').concat(' Hour')
     if(!myhtml.includes(d)){
-    const url = "<div><a href='/oldertrends/"+d+"' class='list-group-item list-group-item-action'>"+d_display+"</a></div>"
+    const url = "<div><a href='/oldertrends/"+GEO+'/'+d+"' class='list-group-item list-group-item-action'>"+d_display+"</a></div>"
     await fs.writeFile('./MyPages/'+geo_name+'/pages.txt', myhtml+url,{flag : 'w'});
     index = await fs.readFile('static/temp.html',{ encoding: 'utf8' });
     const pages = index.replace('<div id="root"></div>',myhtml+url)  
@@ -128,7 +137,7 @@ app.post("/api/html/:GEO",async (request,response) => {
     }
     var sitemap = await fs.readFile('./MyPages/sitemap.xml',{ encoding: 'utf8' });
     var site = `<url>
-        <loc>https://popular-trends.herokuapp.com/oldertrends/`+d + `\r\n</loc>
+        <loc>https://popular-trends.herokuapp.com/oldertrends/`+geo_name+d + `\r\n</loc>
         <lastmod>`+date.toISOString().substring(0,10)+`</lastmod>
     </url>`    
     if(!sitemap.includes(site))

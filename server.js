@@ -24,7 +24,7 @@ app.use(express.static(path.join(__dirname, "client", "build")))
 
 
 app.get("/oldertrends/:GEO",(req,res) => {
-    const GEO = request.params.GEO
+    const GEO = req.params.GEO
     var geo_name = locations.filter(data => data.GEO===GEO)[0].Name
     res.sendFile(path.join(__dirname, "MyPages",geo_name, "pages.html"));
 })

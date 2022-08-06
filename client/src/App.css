@@ -47,6 +47,10 @@ h2{
   border-style: solid;
 }
 
+.content-keyword{
+  margin-top: 10px;
+}
+
 .navigation{
   display: grid;
   grid-template-columns : 33% 33% 33%;

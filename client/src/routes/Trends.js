@@ -44,7 +44,7 @@ function Trends(props) {
     function getContent() {
         if (content) {
             return (content.map(data => {
-                return <Content value={data} />
+                return <Content value={data}/>
             }))
         }
     }
@@ -151,13 +151,17 @@ function Keywords(props) {
 
 function Content(props) {
     const query = props.value.query
+    const keyword = props.value.keywords
     const display = props.value.value.map(data => { return <p>{data}</p> })
     return (
         <>
+            <div className="data">
             <div className='Content' >
                 <div className='Content-Title'><h1>{query}</h1></div>
                 <hr />
                 <div className='Content-Display'>{display}</div>
+            </div>
+            <div className='keyword content-keyword'><Keywords value={keyword} /></div>
             </div>
         </>
     )
