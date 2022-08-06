@@ -8,6 +8,7 @@ const fs = require('fs/promises');
 const Populate = require('../helper/populate.js')
 const keyword_extractor = require("keyword-extractor");
 const Test = require('../schema/test.js')
+const locations = require('../helper/GEO-mapping.js')
 
 const app = express()
 
@@ -15,17 +16,17 @@ const app = express()
 app.get("/api/dailytrends/:GEO", async (request, response) => {
     try{
     const GEO = request.params.GEO
-    console.log(GEO)
+    //console.log(GEO)
     const trends_now = await Trends.findOne({GEO : GEO}).sort({createdAt : -1})
     var date = new Date()
     date.setHours(date.getHours() - 1);
-    const progress = !trends_now || (!trends_now?false:trends_now.createdAt < date)
-    //const progress = true
+    //const progress = !trends_now || (!trends_now?false:trends_now.createdAt < date)
+    const progress = true
     if(!progress){response.status(200).json({values:trends_now,html:false})}
     else{
         response.status(200).json({values:trends_now,html:true})
     const data = await googleTrends.dailyTrends({ geo: GEO })
-    const searches = []
+    //console.log(data)
     const datas = JSON.parse(data).default.trendingSearchesDays
     trendingSearchesDays = datas.map(data => {
         return { date: data.date, dateformatted: data.formattedDate, trendingSearches: data.trendingSearches }
@@ -101,6 +102,8 @@ function getMax(data, n) {
 app.post("/api/html/:GEO",async (request,response) => {
     try{
     const GEO = request.params.GEO
+    var geo_name = locations.filter(data => data.GEO===GEO)[0].Name
+    //console.log(GEO,locations)
     var index = await fs.readFile('./client/public/index.html',{ encoding: 'utf8' });
     var css = await fs.readFile('./client/src/App.css',{ encoding: 'utf8' });
     var html = request.body.html
@@ -112,16 +115,16 @@ app.post("/api/html/:GEO",async (request,response) => {
     await Content.findOneAndUpdate({Date : d_upload,GEO : GEO},{GEO : GEO,content:values,Date:d_upload,SEO : SEO},{upsert:true})
 
     const d = date.toISOString().substring(0,13).replace(/[-T]/g,'')
-    await fs.writeFile('./html-pages/'+GEO+'/'+d+'.html', values);
-    var myhtml = await fs.readFile('./MyPages/'+GEO+'/pages.txt',{ encoding: 'utf8' });
+    await fs.writeFile('./html-pages/'+geo_name+'/'+d+'.html', values);
+    var myhtml = await fs.readFile('./MyPages/'+geo_name+'/pages.txt',{ encoding: 'utf8' });
 
     const d_display = date.toISOString().substring(0,13).replace(/[T]/g,' ').concat(' Hour')
     if(!myhtml.includes(d)){
     const url = "<div><a href='/oldertrends/"+d+"' class='list-group-item list-group-item-action'>"+d_display+"</a></div>"
-    await fs.writeFile('./MyPages/'+GEO+'/pages.txt', myhtml+url,{flag : 'w'});
+    await fs.writeFile('./MyPages/'+geo_name+'/pages.txt', myhtml+url,{flag : 'w'});
     index = await fs.readFile('static/temp.html',{ encoding: 'utf8' });
     const pages = index.replace('<div id="root"></div>',myhtml+url)  
-    await fs.writeFile('./MyPages/'+GEO+'/pages.html', pages,{flag : 'w'});
+    await fs.writeFile('./MyPages/'+geo_name+'/pages.html', pages,{flag : 'w'});
     }
     var sitemap = await fs.readFile('./MyPages/sitemap.xml',{ encoding: 'utf8' });
     var site = `<url>

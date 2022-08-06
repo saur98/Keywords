@@ -52,16 +52,14 @@ function Trends(props) {
     function getGeoCodes(){
         const locations = [
             {Name : "United States" , GEO : "US"},
-            {Name : "India" , GEO : "IND"},
-            {Name : "Australia" , GEO : "AUS"},
-            {Name : "Canada" , GEO : "CAN"},
-            {Name : "Marshal islands" , GEO : "MHL"},
-            {Name : "United Kingdom" , GEO : "ENG"},
-            {Name : "Germany" , GEO : "GER"},
-            {Name : "Switzerland" , GEO : "SUI"},
-            {Name : "Brazil" , GEO : "BRA"},
-            {Name : "New Zealand" , GEO : "NZL"},
-            {Name : "Italy" , GEO : "ITA"}
+            {Name : "India" , GEO : "IN"},
+            {Name : "Australia" , GEO : "AU"},
+            {Name : "Canada" , GEO : "CA"},
+            {Name : "Germany" , GEO : "DE"},
+            {Name : "Switzerland" , GEO : "CH"},
+            {Name : "Brazil" , GEO : "BR"},
+            {Name : "New Zealand" , GEO : "NZ"},
+            {Name : "Italy" , GEO : "IT"}
             ]
         const location_list = locations.map(data => {
             return <option value={data.GEO}>{data.Name}</option>
@@ -79,7 +77,7 @@ function Trends(props) {
     return (
         <>
             <div class='navigation'>
-                <div class='items'><a href="/oldertrends">OLDER TRENDS</a></div>
+                <div class='items'><a href={'/oldertrends/'+country.GEO}>OLDER TRENDS</a></div>
                 <div ><h1 >TRENDING NOW</h1></div>
                 <div class='items'><a href="/">Home</a></div>
             </div>
