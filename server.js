@@ -7,12 +7,14 @@ const checkDir = require('./helper/directory.js')
 const connectDB = require('./database/db.js')
 const Populate = require('./helper/populate.js');
 const locations = require('./helper/GEO-mapping.js')
+const compression = require('compression');
 require("dotenv").config()
 
 
 const port = process.env.PORT || 5000
 
 app.use(cors())
+app.use(compression())
 checkDir()
 connectDB()
 Populate()
