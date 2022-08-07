@@ -1,13 +1,13 @@
 const locations = [
-    {Name : "United States" , GEO : "US"},
-    {Name : "India" , GEO : "IN"},
-    {Name : "Australia" , GEO : "AU"},
-    {Name : "Canada" , GEO : "CA"},
-    {Name : "Germany" , GEO : "DE"},
-    {Name : "Switzerland" , GEO : "CH"},
-    {Name : "Brazil" , GEO : "BR"},
-    {Name : "New Zealand" , GEO : "NZ"},
-    {Name : "Italy" , GEO : "IT"}
+    {Name : "United States" , GEO : "US",Language : "english"},
+    {Name : "India" , GEO : "IN",Language : "english"},
+    {Name : "Australia" , GEO : "AU",Language : "english"},
+    {Name : "Canada" , GEO : "CA",Language : "english"},
+    {Name : "Germany" , GEO : "DE",Language : "german"},
+    {Name : "Switzerland" , GEO : "CH",Language : "german"},
+    {Name : "Brazil" , GEO : "BR",Language : "portuguese"},
+    {Name : "New Zealand" , GEO : "NZ",Language : "english"},
+    {Name : "Italy" , GEO : "IT",Language : "italian"},
     ]
 
 module.exports = locations

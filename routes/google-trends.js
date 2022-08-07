@@ -9,7 +9,6 @@ const Populate = require('../helper/populate.js')
 const keyword_extractor = require("keyword-extractor");
 const Test = require('../schema/test.js')
 const locations = require('../helper/GEO-mapping.js')
-const { query } = require('express')
 
 const app = express()
 
@@ -17,12 +16,13 @@ const app = express()
 app.get("/api/dailytrends/:GEO", async (request, response) => {
     try{
     const GEO = request.params.GEO
+    var language = locations.filter(data => data.GEO===GEO)[0].Language
     //console.log(GEO)
     const trends_now = await Trends.findOne({GEO : GEO}).sort({createdAt : -1})
     var date = new Date()
     date.setHours(date.getHours() - 1);
-    const progress = !trends_now || (!trends_now?false:trends_now.createdAt < date)
-    //const progress = true
+    //const progress = !trends_now || (!trends_now?false:trends_now.createdAt < date)
+    const progress = true
     if(!progress){response.status(200).json({values:trends_now,html:false})}
     else{
         response.status(200).json({values:trends_now,html:true})
@@ -54,10 +54,11 @@ app.get("/api/dailytrends/:GEO", async (request, response) => {
                 let {data} = await axios.get(URL).catch()
                 let $ = cheerio.load(data)
                 let t = $('p').contents().map(function() {
-                    return (this.type === 'text') ? $(this).text()+' ' : '';
+                    let value = (this.type === 'text') ? $(this).text()+' ' : '';
+                    if(value.length>10)return value
                 }).get();
                 var extraction_result = keyword_extractor.extract(t.join(''),{
-                    language:"english",
+                    language:language,
                     remove_digits: true,
                     return_changed_case:true,
                     remove_duplicates: false,

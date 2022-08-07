@@ -6,7 +6,6 @@ const path = require("path")
 const checkDir = require('./helper/directory.js')
 const connectDB = require('./database/db.js')
 const Populate = require('./helper/populate.js');
-const { request } = require('http');
 const locations = require('./helper/GEO-mapping.js')
 require("dotenv").config()
 

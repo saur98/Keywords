@@ -16,7 +16,6 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
-    "express-status-monitor": "^1.3.4",
     "google-trends-api": "^4.9.2",
     "keyword-extractor": "^0.0.23",
     "mongoose": "^6.5.0",
