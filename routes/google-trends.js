@@ -21,8 +21,8 @@ app.get("/api/dailytrends/:GEO", async (request, response) => {
     const trends_now = await Trends.findOne({GEO : GEO}).sort({createdAt : -1})
     var date = new Date()
     date.setHours(date.getHours() - 1);
-    //const progress = !trends_now || (!trends_now?false:trends_now.createdAt < date)
-    const progress = true
+    const progress = !trends_now || (!trends_now?false:trends_now.createdAt < date)
+    //const progress = true
     if(!progress){response.status(200).json({values:trends_now,html:false})}
     else{
         response.status(200).json({values:trends_now,html:true})
