@@ -12,6 +12,7 @@ module.exports = async () =>{
     var pages = []
     var sitemap = ''
     var geo_name = ''
+    var recent_date
     locations.map(data => {
         pages[data.Name]=[]
     })
@@ -28,7 +29,12 @@ module.exports = async () =>{
             <loc>https://popular-trends.herokuapp.com/oldertrends/`+geo_name+'/'+filename+ `\r\n</loc>
             <lastmod>`+value.Date.substring(0,10)+`</lastmod>
                 </url>`
+        recent_date = value.Date
     })
+    sitemap+=`<url>
+            <loc>https://popular-trends.herokuapp.com/oldertrends \r\n</loc>
+            <lastmod>`+recent_date.substring(0,10)+`</lastmod>
+                </url>`
     sitemap_content = `<?xml version="1.0" encoding="UTF-8"?>
 
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

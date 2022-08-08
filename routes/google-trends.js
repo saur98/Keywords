@@ -143,7 +143,7 @@ app.post("/api/html/:GEO",async (request,response) => {
     </url>`    
     if(!sitemap.includes(site))
     {
-        let map = sitemap.replace('</urlset>',site)
+        let map = sitemap.replace('</urlset>',site+'</urlset>')
         await fs.writeFile('./MyPages/sitemap.xml', map,{flag : 'w'});
     }
     }
