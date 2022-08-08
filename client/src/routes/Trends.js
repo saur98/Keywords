@@ -1,8 +1,6 @@
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 import '.././App.css';
-import '../ads/ads.js'
-import home_add from '../ads/ads.js';
 
 
 function Trends(props) {
@@ -13,7 +11,7 @@ function Trends(props) {
     useEffect(() => {
 
         async function calls() {
-            console.log(country.GEO)
+            //console.log(country.GEO)
             const trends = await axios.get("/api/dailytrends/"+country.GEO).catch()
             setSearches(trends)
             setContent(trends.data.values.content)
@@ -36,7 +34,7 @@ function Trends(props) {
         //console.log(searches)
         if (searches.data) {
             return searches.data.values.trends.map(data => {
-                return <Today value={data} />
+                return <div key={data.dateformatted}><Today value={data} /></div>
             })
         }
     }
@@ -44,7 +42,7 @@ function Trends(props) {
     function getContent() {
         if (content) {
             return (content.map(data => {
-                return <Content value={data}/>
+                return <div key={data.query}><Content value={data}/></div>
             }))
         }
     }
@@ -62,7 +60,7 @@ function Trends(props) {
             {Name : "Italy" , GEO : "IT"}
             ]
         const location_list = locations.map(data => {
-            return <option value={data.GEO}>{data.Name}</option>
+            return <option key={data.GEO} value={data.GEO}>{data.Name}</option>
         })
         return (location_list)
     }
@@ -76,10 +74,10 @@ function Trends(props) {
 
     return (
         <>
-            <div class='navigation'>
-                <div class='items'><a href={'/oldertrends/'+country.GEO}>OLDER TRENDS</a></div>
+            <div className='navigation'>
+                <div className='items'><a href={'/oldertrends/'+country.GEO}>OLDER TRENDS</a></div>
                 <div ><h1 >TRENDING NOW</h1></div>
-                <div class='items'><a href="/">Home</a></div>
+                <div className='items'><a href="/">Home</a></div>
             </div>
             <div className="data">
                 <div className="main">
@@ -97,7 +95,6 @@ function Trends(props) {
             <br />
 
             <div className="content" >{content ? getContent() : <progress />}</div>
-            {home_add()}
 
         </>
     )
@@ -113,7 +110,7 @@ function Today(props) {
 
     const values = () => {
         //console.log(trendingSearches)
-        return trendingSearches.map(data => <div className='search' key={data.query}><a href={data.URL} >{data.query}</a></div>)
+        return trendingSearches.map(data => <div className='search' key={data.query}><a key={data.URL} href={data.URL} >{data.query}</a></div>)
     }
 
     return (
@@ -132,7 +129,7 @@ function Keywords(props) {
         return (
             props.value.map(data => {
                 if (data !== "—") {
-                    return <h2>{data}</h2>
+                    return <h2 key={data}>{data}</h2>
                 }
                 else {
                     return ''
@@ -144,7 +141,7 @@ function Keywords(props) {
     return (
         <>
             <h2 className='title'>Top Keywords</h2><br /><hr />
-            <h6 className='keywords'>{display()}</h6>
+            <div className='keywords'>{display()}</div>
         </>
     )
 }
@@ -152,9 +149,11 @@ function Keywords(props) {
 function Content(props) {
     const query = props.value.query
     const keyword = props.value.keywords
-    const display = props.value.value.map(data => { return <p>{data}</p> })
+    var c=0
+    const display = props.value.value.map(data => { return <p key={c++}>{data}</p> })
     return (
         <>
+            <Ads />
             <div className="data">
             <div className='Content' >
                 <div className='Content-Title'><h1>{query}</h1></div>
@@ -164,6 +163,25 @@ function Content(props) {
             <div className='keyword content-keyword'><Keywords value={keyword} /></div>
             </div>
         </>
+    )
+}
+
+
+function Ads(){
+    return (
+        <>
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2654188388870545"
+     crossOrigin="anonymous"></script>
+<ins className="adsbygoogle"
+     style={{display:'block'}}
+     data-ad-client="ca-pub-2654188388870545"
+     data-ad-slot="3286634896"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</>
     )
 }
 export default Trends;
