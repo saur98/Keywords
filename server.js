@@ -25,17 +25,27 @@ app.use(express.static(path.join(__dirname, "client", "build")))
 
 
 app.get("/oldertrends/:GEO",(req,res) => {
+    try {
     const GEO = req.params.GEO
     var geo_name = locations.filter(data => data.GEO===GEO)[0].Name
     res.sendFile(path.join(__dirname, "MyPages",geo_name, "pages.html"));
+    }
+    catch(err){
+    console.log(err)
+    }
 })
 
 app.get("/oldertrends/:GEO/:id",(req,res) => {
+    try{
     const id = req.params.id
     const GEO = req.params.GEO
     var geo_name = locations.filter(data => data.GEO===GEO)[0].Name
     //console.log(id)
     res.sendFile(path.join(__dirname, "html-pages", geo_name, id+".html"));
+    }
+    catch(err){
+        console.log(err)
+    }
 })
 
 app.get("/", (req, res) => {

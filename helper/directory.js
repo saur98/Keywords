@@ -1,6 +1,7 @@
 const fs = require('fs/promises');
 const locations = require('./GEO-mapping.js')
 module.exports = () => {
+    try{
     fs.mkdir('./MyPages', { recursive: true }, (err) => {
         if (err) throw err;
     }).then( () => {
@@ -17,6 +18,10 @@ module.exports = () => {
             fs.mkdir('./html-pages/'+data.Name, { recursive: true })
         })
     });
+    }
+    catch(err){
+        console.log(err)
+    }
     
 }
 
