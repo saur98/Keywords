@@ -32,7 +32,7 @@ module.exports = async () =>{
         recent_date = value.Date
     })
     sitemap+=`<url>
-            <loc>https://popular-trends.herokuapp.com/oldertrends \r\n</loc>
+            <loc>https://popular-trends.herokuapp.com/oldertrends</loc>
             <lastmod>`+recent_date.substring(0,10)+`</lastmod>
                 </url>`
     sitemap_content = `<?xml version="1.0" encoding="UTF-8"?>

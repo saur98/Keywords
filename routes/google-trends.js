@@ -16,13 +16,14 @@ const app = express()
 app.get("/api/dailytrends/:GEO", async (request, response) => {
     try{
     const GEO = request.params.GEO
+    console.log(GEO)
     var language = locations.filter(data => data.GEO===GEO)[0].Language
     //console.log(GEO)
     const trends_now = await Trends.findOne({GEO : GEO}).sort({createdAt : -1})
     var date = new Date()
     date.setHours(date.getHours() - 1);
-    const progress = !trends_now || (!trends_now?false:trends_now.createdAt < date)
-    //const progress = true
+    //const progress = !trends_now || (!trends_now?false:trends_now.createdAt < date)
+    const progress = true
     if(!progress){response.status(200).json({values:trends_now,html:false})}
     else{
         response.status(200).json({values:trends_now,html:true})
@@ -138,7 +139,7 @@ app.post("/api/html/:GEO",async (request,response) => {
     }
     var sitemap = await fs.readFile('./MyPages/sitemap.xml',{ encoding: 'utf8' });
     var site = `<url>
-        <loc>https://popular-trends.herokuapp.com/oldertrends/`+geo_name+'/'+d + `\r\n</loc>
+        <loc>https://popular-trends.herokuapp.com/oldertrends/`+geo_name+'/'+d + `</loc>
         <lastmod>`+date.toISOString().substring(0,10)+`</lastmod>
     </url>`    
     if(!sitemap.includes(site))
