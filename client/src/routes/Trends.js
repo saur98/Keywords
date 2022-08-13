@@ -81,9 +81,9 @@ function Trends(props) {
                     
                         <div className='home'><a href="/">Home</a></div>
                         <div className='contact-about'>
-                            <div><a href="/contact"> Contact Us</a></div>
+                            <div><a href="/contact">Contact Us</a></div>
                             <br />
-                            <div><a href="/about"> About Us</a></div>
+                            <div><a href="/about">About Us</a></div>
                         </div>
                     
                 </div>
@@ -106,6 +106,8 @@ function Trends(props) {
             <div className='contents content'>
                 {content ? getContent() : <progress />}
             </div>
+            <div><a href="/disclaimer">Disclaimer</a></div>
+            <div><a href="/privacy">Privacy-Policy</a></div>
 
         </>
     )

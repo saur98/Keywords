@@ -60,6 +60,14 @@ app.get("/about", (req, res) => {
     res.sendFile(path.join(__dirname, "static","about.html"));
 });
 
+app.get("/privacy", (req, res) => {
+    res.sendFile(path.join(__dirname, "static","privacy-policy.html"));
+});
+
+app.get("/disclaimer", (req, res) => {
+    res.sendFile(path.join(__dirname, "static","disclaimer.html"));
+});
+
 app.get("/sitemap.xml", (req, res) => {
     res.sendFile(path.join(__dirname, "MyPages", "sitemap.xml"));
 });
