@@ -154,14 +154,13 @@ function Content(props) {
     return (
         <>
             <Ads />
-            <div className="data">
+            
             <div className='Content' >
                 <div className='Content-Title'><h1>{query}</h1></div>
                 <hr />
-                <div className='Content-Display'>{display}</div>
+                <div className='keyword content-keyword'><Keywords value={keyword} /></div>    
             </div>
-            <div className='keyword content-keyword'><Keywords value={keyword} /></div>
-            </div>
+            
         </>
     )
 }
