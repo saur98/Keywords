@@ -77,7 +77,16 @@ function Trends(props) {
             <div className='navigation'>
                 <div className='items'><a href={'/oldertrends/'+country.GEO}>OLDER TRENDS</a></div>
                 <div ><h1 >TRENDING NOW</h1></div>
-                <div className='items'><a href="/">Home</a></div>
+                <div className='pages'>
+                    
+                        <div className='home'><a href="/">Home</a></div>
+                        <div className='contact-about'>
+                            <div><a href="/contact"> Contact Us</a></div>
+                            <br />
+                            <div><a href="/about"> About Us</a></div>
+                        </div>
+                    
+                </div>
             </div>
             <div className="data">
                 <div className="main">
