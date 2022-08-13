@@ -63,7 +63,6 @@ app.get("/api/dailytrends/:GEO", async (request, response) => {
                     remove_digits: true,
                     return_changed_case:true,
                     remove_duplicates: false,
-                    return_chained_words : true
                 });
                 str.push({query:query,keywords:getMax(extraction_result,10)})
                 for(var p of t){
