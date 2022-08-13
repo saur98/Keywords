@@ -121,7 +121,7 @@ app.post("/api/html/:GEO",async (request,response) => {
     var values = index.replace("</head>","<style>"+css+"</style>").replace('<div id="root"></div>',html)
     const date = new Date()
     const d_upload = date.toISOString().substring(0,13)
-    await Content.findOneAndUpdate({Date : d_upload,GEO : GEO},{GEO : GEO,content:values,Date:d_upload,SEO : SEO},{upsert:true})
+    await Content.findOneAndUpdate({Date : d_upload,GEO : GEO},{GEO : GEO,content:values,Date:d_upload},{upsert:true})
 
     const d = date.toISOString().substring(0,13).replace(/[-T]/g,'')
     await fs.writeFile('./html-pages/'+geo_name+'/'+d+'.html', values);

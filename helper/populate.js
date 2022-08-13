@@ -22,7 +22,7 @@ module.exports = async () =>{
         //console.log(value.GEO,locations)
         geo_name = locations.filter(data => data.GEO===value.GEO)[0].Name
         const filename = value.Date.substring(0,13).replace(/[-T]/g,'')
-        var values = index.replace("</head>","<style>"+css+"</style>").replace('<div id="root"></div>',value.content).replace('<meta name="keywords" content="" />',value.SEO)
+        var values = index.replace("</head>","<style>"+css+"</style>").replace('<div id="root"></div>',value.content)
         fs.writeFile('./html-pages/'+geo_name+'/'+filename+'.html', values);
         pages[geo_name].push("<div><a href='/oldertrends/"+value.GEO+'/'+filename+"' class='list-group-item list-group-item-action'>"+value.Date.replace(/[T]/g,' ').concat(' Hour')+"</a></div>" )
         sitemap+=`<url>
