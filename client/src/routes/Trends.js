@@ -94,7 +94,9 @@ function Trends(props) {
             </div>
             <br />
 
-            <div className="content" >{content ? getContent() : <progress />}</div>
+            <div className='contents content'>
+                {content ? getContent() : <progress />}
+            </div>
 
         </>
     )
@@ -150,17 +152,16 @@ function Content(props) {
     const query = props.value.query
     const keyword = props.value.keywords
     var c=0
-    const display = props.value.value.map(data => { return <p key={c++}>{data}</p> })
+    //const display = props.value.value.map(data => { return <p key={c++}>{data}</p> })
     return (
         <>
             <Ads />
             
             <div className='Content' >
                 <div className='Content-Title'><h1>{query}</h1></div>
-                <hr />
                 <div className='keyword content-keyword'><Keywords value={keyword} /></div>    
             </div>
-            
+        
         </>
     )
 }

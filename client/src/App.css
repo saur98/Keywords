@@ -20,7 +20,7 @@ h2{
 .Content{
   border: 1px;
   border-style: solid;
-  margin-top: 10px;
+  margin: 10px;
 } 
 
 .Content-Title{
@@ -47,9 +47,6 @@ h2{
   border-style: solid;
 }
 
-.content-keyword{
-  margin-top: 10px;
-}
 
 .navigation{
   display: grid;
@@ -59,4 +56,9 @@ h2{
 
 .items{
   margin-top: 30px;
+}
+
+.contents{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
 }

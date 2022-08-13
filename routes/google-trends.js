@@ -16,7 +16,7 @@ const app = express()
 app.get("/api/dailytrends/:GEO", async (request, response) => {
     try{
     const GEO = request.params.GEO
-    console.log(GEO)
+    //console.log(GEO)
     var language = locations.filter(data => data.GEO===GEO)[0].Language
     //console.log(GEO)
     const trends_now = await Trends.findOne({GEO : GEO}).sort({createdAt : -1})
@@ -65,7 +65,7 @@ app.get("/api/dailytrends/:GEO", async (request, response) => {
                     remove_duplicates: false,
                     return_chained_words : true
                 });
-                str.push({query:query,value:t,keywords:getMax(extraction_result,10)})
+                str.push({query:query,keywords:getMax(extraction_result,10)})
                 for(var p of t){
                     str_keyword.push(p)
                 }
@@ -80,8 +80,7 @@ app.get("/api/dailytrends/:GEO", async (request, response) => {
         language:"english",
         remove_digits: true,
         return_changed_case:true,
-        remove_duplicates: false,
-        return_chained_words : true
+        remove_duplicates: false
     });
    
 await Trends.findOneAndUpdate({Date : d,GEO: GEO},{GEO:GEO,trends : trendingSearches,content : str,keywords : getMax(extraction_result,10),Date : d},{upsert:true})
