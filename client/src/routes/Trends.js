@@ -19,7 +19,7 @@ function Trends(props) {
             setTimeout(() => {
                 if (trends.data.html) {
                     const MyHtml = document.getElementById("root").innerHTML
-                    axios.post("/api/html/"+country.GEO, { html: MyHtml, SEO: trends.data.values.trends[0]['trendingSearches'][0]['query'] }).catch()
+                    axios.post("/api/html/"+country.GEO, { html: MyHtml}).catch()
                 }
             }, 0)
         }
