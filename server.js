@@ -68,7 +68,8 @@ app.get("/disclaimer", (req, res) => {
     res.sendFile(path.join(__dirname, "static","disclaimer.html"));
 });
 
-app.get("/sitemap.xml", (req, res) => {
+app.get("/sitemap.xml", async(req, res) => {
+    await Populate();
     res.sendFile(path.join(__dirname, "MyPages", "sitemap.xml"));
 });
 
