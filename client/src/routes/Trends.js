@@ -53,11 +53,7 @@ function Trends(props) {
             {Name : "India" , GEO : "IN"},
             {Name : "Australia" , GEO : "AU"},
             {Name : "Canada" , GEO : "CA"},
-            {Name : "Germany" , GEO : "DE"},
-            {Name : "Switzerland" , GEO : "CH"},
-            {Name : "Brazil" , GEO : "BR"},
-            {Name : "New Zealand" , GEO : "NZ"},
-            {Name : "Italy" , GEO : "IT"}
+            {Name : "New Zealand" , GEO : "NZ"}
             ]
         const location_list = locations.map(data => {
             return <option key={data.GEO} value={data.GEO}>{data.Name}</option>
