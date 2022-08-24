@@ -20,7 +20,8 @@ module.exports = async () =>{
         
         if(!value.GEO){value.GEO = 'US'}
         //console.log(value.GEO,locations)
-        geo_name = locations.filter(data => data.GEO===value.GEO)[0].Name
+        geo_name = locations.filter(data => data.GEO===value.GEO)[0]?.Name
+        if(!geo_name)return
         const filename = value.Date.substring(0,13).replace(/[-T]/g,'')
         var values = index.replace("</head>","<style>"+css+"</style>").replace('<div id="root"></div>',value.content)
         fs.writeFile('./html-pages/'+geo_name+'/'+filename+'.html', values);
