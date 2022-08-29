@@ -137,7 +137,7 @@ app.post("/api/html/:GEO",async (request,response) => {
     }
     var sitemap = await fs.readFile('./MyPages/sitemap.xml',{ encoding: 'utf8' });
     var site = `<url>
-        <loc>https://popular-trends.herokuapp.com/oldertrends/`+geo_name+'/'+d + `</loc>
+        <loc>https://popular-trends.herokuapp.com/oldertrends/`+GEO+'/'+d + `</loc>
         <lastmod>`+date.toISOString().substring(0,10)+`</lastmod>
     </url>`    
     if(!sitemap.includes(site))
