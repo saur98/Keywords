@@ -72,7 +72,7 @@ function Trends(props) {
         <>
             <div className='navigation'>
                 <div className='items'><a href={'/oldertrends/'+country.GEO}>OLDER TRENDS</a></div>
-                <div ><h1 >TRENDING NOW</h1></div>
+                <div ><h1 >TRENDING KEYWORDS NOW</h1><h6>Find out popular keywords trending in the world</h6></div>
                 <div className='pages'>
                     
                         <div className='home'><a href="/">Home</a></div>
@@ -91,6 +91,7 @@ function Trends(props) {
                         <select name="location" id="location" onChange={changeGeo}>
                             {getGeoCodes()}
                         </select>
+                        (Select from dropdown to change country)
                     </div>
                     <hr />
                     {displaysearch()}
