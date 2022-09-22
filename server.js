@@ -24,18 +24,20 @@ app.use(trends)
 app.use(express.static(path.join(__dirname, "client", "build")))
 
 
-app.get("/oldertrends/:GEO",(req,res) => {
+app.get("/oldertrends/:GEO",(req,res,next) => {
     try {
     const GEO = req.params.GEO
     var geo_name = locations.filter(data => data.GEO===GEO)[0].Name
     res.sendFile(path.join(__dirname, "MyPages",geo_name, "pages.html"));
     }
     catch(err){
-    console.log(err)
+       // res.status(404).sendFile(path.join(__dirname, "static","404.html"));
+    //console.log(err)
+    next(err)
     }
 })
 
-app.get("/oldertrends/:GEO/:id",(req,res) => {
+app.get("/oldertrends/:GEO/:id",(req,res,next) => {
     try{
     const id = req.params.id
     const GEO = req.params.GEO
@@ -44,7 +46,8 @@ app.get("/oldertrends/:GEO/:id",(req,res) => {
     res.sendFile(path.join(__dirname, "html-pages", geo_name, id+".html"));
     }
     catch(err){
-        console.log(err)
+        //res.status(404).sendFile(path.join(__dirname, "static","404.html"));
+        next(err)
     }
 })
 
@@ -76,5 +79,10 @@ app.get("/sitemap.xml", async(req, res) => {
 app.get("*", (req, res) => {
     res.status(404).sendFile(path.join(__dirname, "static","404.html"));
 });
+
+app.use((err, req, res, next) => {
+    console.error(err.stack)
+    res.status(404).sendFile(path.join(__dirname, "static","404.html"));
+  })
 
 app.listen(port,() => console.log("server is running at port 8000"))
