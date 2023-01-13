@@ -27,13 +27,13 @@ module.exports = async () =>{
         fs.writeFile('./html-pages/'+geo_name+'/'+filename+'.html', values);
         pages[geo_name].push("<div><a href='/oldertrends/"+value.GEO+'/'+filename+"' class='list-group-item list-group-item-action'>"+value.Date.replace(/[T]/g,' ').concat(' Hour')+"</a></div>" )
         sitemap+=`<url>
-            <loc>https://popular-trends.herokuapp.com/oldertrends/`+value.GEO+'/'+filename+ `</loc>
+            <loc>https://popular-trends.onrender.com/oldertrends/`+value.GEO+'/'+filename+ `</loc>
             <lastmod>`+value.Date.substring(0,10)+`</lastmod>
                 </url>`
         recent_date = value.Date
     })
     sitemap+=`<url>
-            <loc>https://popular-trends.herokuapp.com/oldertrends</loc>
+            <loc>https://popular-trends.onrender.com/oldertrends</loc>
             <lastmod>`+recent_date.substring(0,10)+`</lastmod>
                 </url>`
     sitemap_content = `<?xml version="1.0" encoding="UTF-8"?>
